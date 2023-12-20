@@ -5,7 +5,6 @@ import "advent_of_code_2023/utils"
 func Part2(input string) {
 	lines := utils.SplitLines(input)
 
-	// instruction := lines[0]
 	desertMap := getNodes(lines)
 
 	startingNodes := make(map[string]Node)
