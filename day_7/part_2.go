@@ -73,19 +73,19 @@ func mergeP2(handA []CamelHand, handB []CamelHand) []CamelHand {
 
 func isHandALessThanHandBP2(handA CamelHand, handB CamelHand) bool {
 	var cardRanking = map[string]int{
-		"A": 14,
-		"K": 13,
-		"Q": 12,
-		"T": 11,
-		"9": 10,
-		"8": 9,
-		"7": 8,
-		"6": 7,
-		"5": 6,
-		"4": 5,
-		"3": 4,
-		"2": 3,
-		"J": 2,
+		"A": 13,
+		"K": 12,
+		"Q": 11,
+		"T": 10,
+		"9": 9,
+		"8": 8,
+		"7": 7,
+		"6": 6,
+		"5": 5,
+		"4": 4,
+		"3": 3,
+		"2": 2,
+		"J": 1,
 	}
 
 	handARank := getHandRankingP2(handA)
@@ -109,23 +109,64 @@ func getHandRankingP2(hand CamelHand) typeRank {
 	for _, card := range hand.hand {
 		cardCounts[card]++
 	}
-	println(cardCounts)
+	jokerCount := cardCounts['J']
 
-	// Check for different hand types
 	switch {
 	case hasCountP2(cardCounts, 5):
 		return FiveOfAKind
 	case hasCountP2(cardCounts, 4):
+		// JKKKK
+		if jokerCount == 1 {
+			return FiveOfAKind
+		}
+		// JJJJK
+		if jokerCount == 4 {
+			return FiveOfAKind
+		}
 		return FourOfAKind
 	case hasCountP2(cardCounts, 3) && hasCountP2(cardCounts, 2):
+		// JJKKK
+		if jokerCount == 2 {
+			return FiveOfAKind
+		}
+		// JJJKK
+		if jokerCount == 3 {
+			return FiveOfAKind
+		}
 		return FullHouse
 	case hasCountP2(cardCounts, 3):
+		//JKKK1
+		if jokerCount == 1 {
+			return FourOfAKind
+		}
+		// JJJK1
+		if jokerCount == 3 {
+			return FourOfAKind
+		}
 		return ThreeOfAKind
 	case hasCountP2(cardCounts, 2) && countPairsP2(cardCounts) == 2:
+		// J22KK
+		if jokerCount == 1 {
+			return FullHouse
+		}
+		// JJ2KK
+		if jokerCount == 2 {
+			return FourOfAKind
+		}
 		return TwoPair
 	case hasCountP2(cardCounts, 2):
+		// KKJ12
+		if jokerCount == 1 {
+			return ThreeOfAKind
+		}
+		if jokerCount == 2 {
+			return ThreeOfAKind
+		}
 		return OnePair
 	default:
+		if jokerCount == 1 {
+			return OnePair
+		}
 		return HighCard
 	}
 }
