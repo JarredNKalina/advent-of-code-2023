@@ -1,0 +1,150 @@
+package day_7
+
+import (
+	"advent_of_code_2023/utils"
+	"strings"
+)
+
+func Part2(input string) {
+	lines := utils.SplitLines(input)
+
+	var camelHands []CamelHand
+
+	for _, line := range lines {
+		camelHands = append(camelHands, convertStringsToCamelHandP2(line))
+	}
+
+	sortedCards := sortCardsP2(camelHands)
+
+	var result = 0
+	for i, card := range sortedCards {
+
+		result = result + card.bid*(i+1)
+	}
+
+	println("The result is: ", result)
+}
+
+func convertStringsToCamelHandP2(line string) CamelHand {
+	line1, line2, _ := strings.Cut(line, " ")
+
+	return CamelHand{
+		hand: line1,
+		bid:  utils.ParseInt(line2),
+	}
+
+}
+
+func sortCardsP2(unsortedCards []CamelHand) []CamelHand {
+	sortedCards := mergeSortP2(unsortedCards)
+	return sortedCards
+}
+
+func mergeSortP2(items []CamelHand) []CamelHand {
+	if len(items) < 2 {
+		return items
+	}
+	first := mergeSortP2(items[:len(items)/2])
+	second := mergeSortP2(items[len(items)/2:])
+	return mergeP2(first, second)
+}
+
+func mergeP2(handA []CamelHand, handB []CamelHand) []CamelHand {
+	var final []CamelHand
+	i := 0
+	j := 0
+	for i < len(handA) && j < len(handB) {
+		if isHandALessThanHandBP2(handA[i], handB[j]) {
+			final = append(final, handA[i])
+			i++
+		} else {
+			final = append(final, handB[j])
+			j++
+		}
+	}
+	for ; i < len(handA); i++ {
+		final = append(final, handA[i])
+	}
+	for ; j < len(handB); j++ {
+		final = append(final, handB[j])
+	}
+	return final
+}
+
+func isHandALessThanHandBP2(handA CamelHand, handB CamelHand) bool {
+	var cardRanking = map[string]int{
+		"A": 14,
+		"K": 13,
+		"Q": 12,
+		"T": 11,
+		"9": 10,
+		"8": 9,
+		"7": 8,
+		"6": 7,
+		"5": 6,
+		"4": 5,
+		"3": 4,
+		"2": 3,
+		"J": 2,
+	}
+
+	handARank := getHandRankingP2(handA)
+	handBRank := getHandRankingP2(handB)
+
+	if handARank == handBRank {
+		for i := 0; i < len(handA.hand); i++ {
+			if cardRanking[string(handA.hand[i])] == cardRanking[string(handB.hand[i])] {
+				continue
+			}
+			return cardRanking[string(handA.hand[i])] < cardRanking[string(handB.hand[i])]
+
+		}
+	}
+
+	return typeRanking[handARank] < typeRanking[handBRank]
+}
+
+func getHandRankingP2(hand CamelHand) typeRank {
+	cardCounts := make(map[rune]int)
+	for _, card := range hand.hand {
+		cardCounts[card]++
+	}
+	println(cardCounts)
+
+	// Check for different hand types
+	switch {
+	case hasCountP2(cardCounts, 5):
+		return FiveOfAKind
+	case hasCountP2(cardCounts, 4):
+		return FourOfAKind
+	case hasCountP2(cardCounts, 3) && hasCountP2(cardCounts, 2):
+		return FullHouse
+	case hasCountP2(cardCounts, 3):
+		return ThreeOfAKind
+	case hasCountP2(cardCounts, 2) && countPairsP2(cardCounts) == 2:
+		return TwoPair
+	case hasCountP2(cardCounts, 2):
+		return OnePair
+	default:
+		return HighCard
+	}
+}
+
+func hasCountP2(counts map[rune]int, target int) bool {
+	for _, count := range counts {
+		if count == target {
+			return true
+		}
+	}
+	return false
+}
+
+func countPairsP2(counts map[rune]int) int {
+	pairCount := 0
+	for _, count := range counts {
+		if count == 2 {
+			pairCount++
+		}
+	}
+	return pairCount
+}
