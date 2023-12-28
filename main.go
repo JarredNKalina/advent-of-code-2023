@@ -1,12 +1,15 @@
 package main
 
 import (
+	"advent_of_code_2023/day_10"
+	"advent_of_code_2023/day_11"
 	"advent_of_code_2023/day_3"
 	"advent_of_code_2023/day_4"
 	"advent_of_code_2023/day_5"
 	"advent_of_code_2023/day_6"
 	"advent_of_code_2023/day_7"
 	"advent_of_code_2023/day_8"
+	"advent_of_code_2023/day_9"
 	"advent_of_code_2023/utils"
 	"fmt"
 	"log"
@@ -44,6 +47,12 @@ func main() {
 		runDay(day, day_7.Part1, day_7.Part2, input)
 	case "8":
 		runDay(day, nil, day_8.Part2, input)
+	case "9":
+		runDay(day, day_9.Part1, day_9.Part2, input)
+	case "10":
+		runDay(day, day_10.Part1, day_10.Part2, input)
+	case "11":
+		runDay(day, day_11.Part1, day_11.Part2, input)
 	default:
 		log.Fatalf("Unknown day: %s\n", day)
 	}

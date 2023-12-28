@@ -16,7 +16,7 @@ func extractNumbers(line string) []int {
 	}
 	return numbers
 }
-
+ 
 func Part1(input string) {
 	lines := utils.SplitLines(input)
 

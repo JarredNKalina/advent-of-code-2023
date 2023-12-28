@@ -50,7 +50,6 @@ func Part1(input string) {
 	var locations []int
 
 	_, seeds, _ := strings.Cut(mapContent[0], ": ")
-	println(seeds)
 
 	for _, seedStr := range strings.Fields(seeds) {
 		seed := utils.ParseInt(seedStr)
